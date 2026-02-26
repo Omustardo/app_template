@@ -63,7 +63,7 @@ build-wasm-dev: build-common
 	cd $(APP_DIR) && trunk build --quiet --public-url="/"
 build-release-wasm: build-common
 	cd $(APP_DIR) && trunk build --release --quiet --public-url="/"
-	#cd $(APP_DIR) && trunk build --release --quiet --public-url=/share/app_template/2026-02-26/
+	#cd $(APP_DIR) && trunk build --release --quiet --public-url=/share/app_template/$(date +%Y-%m-%d)/
 run-release-wasm: build-release-wasm
 	cd $(APP_DIR) && trunk serve --release --quiet
 
