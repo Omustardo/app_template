@@ -1,8 +1,6 @@
 // TEMPLATE_TODO: change my-app to your app name.
 var cacheName = 'egui-my-app';
 
-// TEMPLATE_TODO: All of the following paths need to be updated to match the `--public-url` path set in Makefile.
-//   If you are serving the app from the root of your website, then the paths don't need to change.
 var filesToCache = [
     './',
     './index.html',
