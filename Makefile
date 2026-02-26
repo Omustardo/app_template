@@ -31,6 +31,10 @@ APP_PACKAGE := app
 # Relative directory where the app crate is located
 APP_DIR := src/crates/app
 
+# This is the relative directory to the root that this will be deployed at. This only matters for wasm builds.
+# For example, if I want to serve at: https://omustardo.com/share/my_app/2026-02-15/, then this needs to be: /share/my_app/2026-02-15/
+PUBLIC_URL=/share/app_template/
+
 all: run
 
 build: build-native-dev build-wasm-dev
@@ -52,20 +56,14 @@ build-release-native: build-common
 run-release-native: build-release-native
 	cd src && cargo run --package $(APP_PACKAGE) --release --quiet
 
-# IMPORTANT: `trunk build` commands have a `--public-url` parameter needs to be modified if the build is meant for
-#       deployment (rather than just local testing)
-#       It is the relative directory to the root that this will be deployed at. If I want to share a build
-#       at: https://omustardo.com/share/my_app/2026-02-15/, then I need to compile with
-#       `--public-url=/share/my_app/2026-02-15/`
-#       `trunk build` will generate a `dist` directory wherever it is run from (APP_DIR in this case) so you'll
-#       need to copy that directory over to the server.
 build-wasm-dev: build-common
-	cd $(APP_DIR) && trunk build --quiet --public-url="/"
+	cd $(APP_DIR) && trunk build --quiet --public-url=$(PUBLIC_URL)
 build-release-wasm: build-common
-	cd $(APP_DIR) && trunk build --release --quiet --public-url="/"
-	#cd $(APP_DIR) && trunk build --release --quiet --public-url=/share/app_template/$(date +%Y-%m-%d)/
+	# This will generate a `dist` directory wherever it is run from (APP_DIR in this case).
+	# To serve this, just serve the directory in a HTTP server.
+	cd $(APP_DIR) && trunk build --release --quiet --public-url=$(PUBLIC_URL)
 run-release-wasm: build-release-wasm
-	cd $(APP_DIR) && trunk serve --release --quiet
+	cd $(APP_DIR) && trunk serve --release --quiet --public-URL=$(PUBLIC_URL)
 
 # Compress the release binary with UPX. https://upx.github.io/
 build-release-native-compressed: build-release-native
@@ -128,7 +126,7 @@ run:
 
 web:
 	echo "Load the website at http://localhost:50051/index.html#dev"
-	cd $(APP_DIR) && trunk serve --port=50051  # trunk will build and serve at 127.0.0.1:50051 and rebuild automatically when making code changes. Use http://localhost:50051/index.html#dev as `#dev` prevents caching (implemented in main.rs).
+	cd $(APP_DIR) && trunk serve --port=50051 --public-url=$(PUBLIC_URL) # trunk will build and serve at 127.0.0.1:50051 and rebuild automatically when making code changes. Use http://localhost:50051/index.html#dev as `#dev` prevents caching (implemented in main.rs).
 
 keep-sorted:
 	# https://github.com/google/keep-sorted : Sort lines between a pair of "keep-sorted start" and "keep-sorted end".
