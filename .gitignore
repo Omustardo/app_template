@@ -1,0 +1,4 @@
+# Rust builds
+target/
+# RustRover IDE
+.idea/
