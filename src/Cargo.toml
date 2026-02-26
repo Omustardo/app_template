@@ -5,7 +5,6 @@ members = ["crates/*"]
 
 [workspace.dependencies] # Shared dependencies across all crates
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
 chrono = { version = "0.4", features = ["serde"] }
 # WARNING: Updating this is unlikely to be a drop-in replacement. Even if you make it compile, unless everything is
 # very well tested, behavior will probably break. The new syntax won't work well with LLMs. All dependencies that use
@@ -35,11 +34,8 @@ uuid = { version = "1.0", features = ["v4", "serde", "js"] }
 bitflags = { version = "2.9.1", features = ["serde"] }
 strum = "0.27.1"
 strum_macros = "0.27.1"
-text_trees = "0.1"
-petgraph = { version = "0.8.2", features = ["serde-1"] }
 ron = "0.10"
 enum-map = { version = "2.7", features = ["serde"] }
-approx = "0.5.1"
 egui_ltreeview = { version = "0.5.3", features = ["persistence", "doc"] }
 rand = "0.9.2"
 bincode = { version = "2.0.1", features = ["serde"] }
