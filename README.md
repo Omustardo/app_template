@@ -7,7 +7,7 @@ easier starting point when working on smaller projects. I made it a template
 rather than a library so it's a starting point to modify, rather than
 something to build on top of.
 
-See it live: https://www.omustardo/com/share/app_template/
+See it live: https://www.omustardo.com/share/app_template/
 
 ## What you get
 

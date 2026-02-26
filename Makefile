@@ -63,7 +63,7 @@ build-wasm-dev: build-common
 	cd $(APP_DIR) && trunk build --quiet --public-url="/"
 build-release-wasm: build-common
 	cd $(APP_DIR) && trunk build --release --quiet --public-url="/"
-	#cd $(APP_DIR) && trunk build --release --quiet --public-url=/share/my_app/$(date +%Y-%m-%d)/
+	#cd $(APP_DIR) && trunk build --release --quiet --public-url=/share/app_template/2026-02-26/
 run-release-wasm: build-release-wasm
 	cd $(APP_DIR) && trunk serve --release --quiet
 
@@ -116,7 +116,7 @@ presubmit: licenses-check test-release size-check
 # Push local commits to github. Use SSH to connect to the remote repository rather than HTTP since it
 # avoids the need to log in each time. Using SSH requires having created a SSH key pair on the local computer,
 # and having added the public key to your Github account. For more info, see SSH in https://www.omustardo.com/help/git.html
-REPO_SSH_URL := git@github.com:Omustardo/my_app.git
+REPO_SSH_URL := git@github.com:Omustardo/app_template.git
 push: presubmit
 	echo "Presubmit checks passed ✓"
 	echo "Pushing to local changes to github..."
