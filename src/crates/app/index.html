@@ -9,7 +9,10 @@
     <title>My App</title>
 
     <!-- config for our rust wasm binary. go to https://trunkrs.dev/assets/#rust for more customization -->
-    <link data-trunk rel="rust" data-wasm-opt="2" />
+    <!-- NOTE: data-wasm-opt is intentionally omitted. wasm-opt without --enable-reference-types corrupts the
+         externref table that wasm-bindgen requires, causing a "RangeError: failed to grow table" at startup.
+         The release binary is already optimized by the Rust compiler (opt-level = 2 in Cargo profiles). -->
+    <link data-trunk rel="rust" />
     <!-- this is the base url relative to which other urls will be constructed. trunk will insert this from the public-url option -->
     <base data-trunk-public-url />
 
