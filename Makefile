@@ -52,18 +52,25 @@ build-release-native: build-common
 run-release-native: build-release-native
 	cd src && cargo run --package $(APP_PACKAGE) --release --quiet
 
-# IMPORTANT: `trunk build` commands have a `--public-url` parameter needs to be modified if the build is meant for
-#       deployment (rather than just local testing)
-#       It is the relative directory to the root that this will be deployed at. If I want to share a build
-#       at: https://omustardo.com/share/my_app/2026-02-15/, then I need to compile with
-#       `--public-url=/share/my_app/2026-02-15/`
+# IMPORTANT: `trunk build` commands have a `--public-url` parameter that must match the path where the app is served.
+#       For local testing with `trunk serve`, "/" is correct.
+#       For deployment, set it to the path on the server. If deploying to
+#       https://omustardo.com/share/app_template/, use --public-url=/share/app_template/
 #       `trunk build` will generate a `dist` directory wherever it is run from (APP_DIR in this case) so you'll
 #       need to copy that directory over to the server.
+#
+# DEPLOY_URL is used by build-deploy-wasm. Override it on the command line if needed:
+#   make build-deploy-wasm DEPLOY_URL=/share/app_template/
+DEPLOY_URL ?= /share/app_template/
+
 build-wasm-dev: build-common
 	cd $(APP_DIR) && trunk build --quiet --public-url="/"
 build-release-wasm: build-common
 	cd $(APP_DIR) && trunk build --release --quiet --public-url="/"
-	#cd $(APP_DIR) && trunk build --release --quiet --public-url=/share/app_template/$(date +%Y-%m-%d)/
+# Like build-release-wasm, but sets the public URL for deployment on the web server.
+# Copy the resulting dist/ directory to the server at the path matching DEPLOY_URL.
+build-deploy-wasm: build-common
+	cd $(APP_DIR) && trunk build --release --quiet --public-url="$(DEPLOY_URL)"
 run-release-wasm: build-release-wasm
 	cd $(APP_DIR) && trunk serve --release --quiet
 
