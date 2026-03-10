@@ -7,6 +7,7 @@ mod tick;
 
 pub use app::MyApp;
 pub use app::MyAppState;
+pub use app::Layer;
 
 /// The save directory name on native. "Local Storage" is used on the web.
 /// The full directory depends on the system (Linux/etc). This const is expected to be used in `storage_dir(SAVE_DIR)`.

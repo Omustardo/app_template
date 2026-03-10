@@ -1,20 +1,10 @@
 use crate::tabs::TabName;
-use egui_dock::{DockState, NodeIndex};
+use egui_dock::{DockState};
 use strum_macros::{Display, EnumIter};
 
 #[derive(Debug, Clone, serde::Deserialize, serde::Serialize, EnumIter, Display)]
 pub enum LayoutPresetName {
-    // TODO: consider providing the list of locked tabs to these functions, and make them
-    //   render a custom default depending on which tabs are available. Passing in only the widget
-    //   boolean is odd.
-    //   The trouble with not having everything unlocked by default is that I don't have a good way
-    //   to open new tabs in reasonable locations. It's a downside of immediate mode.
-    //   If I continue with the approach of allowing tabs to be locked, I need to have a way
-    //   to add new tabs as they are unlocked, even if it adds them to a weird spot.
-    ThreePanelsWithLogsBottomCenter,
     SinglePanel,
-    TwoTabs,
-    TwoPanels,
 }
 
 impl LayoutPresetName {
@@ -22,9 +12,6 @@ impl LayoutPresetName {
     pub fn dock_state(&self) -> DockState<TabName> {
         match self {
             LayoutPresetName::SinglePanel => only_center(),
-            LayoutPresetName::TwoTabs => two_tabs(),
-            LayoutPresetName::TwoPanels => two_panels(),
-            LayoutPresetName::ThreePanelsWithLogsBottomCenter => three_panels(),
         }
     }
 }
@@ -33,40 +20,6 @@ fn only_center() -> DockState<TabName> {
     DockState::new(vec![TabName::CenterPanel])
 }
 
-fn two_tabs() -> DockState<TabName> {
-    use TabName::{LeftPanel, RightPanel};
-    DockState::new(vec![LeftPanel, RightPanel])
-}
-
-fn two_panels() -> DockState<TabName> {
-    use TabName::{LeftPanel, RightPanel};
-
-    let mut state = DockState::new(vec![RightPanel]);
-
-    // Split to the left.
-    let [_, _] = state.main_surface_mut().split_left(NodeIndex::root(), 0.4, vec![LeftPanel]);
-
-    state
-}
-
-fn three_panels() -> DockState<TabName> {
-    use TabName::{LeftPanel, RightPanel, Logs, CenterPanel};
-
-    let mut state = DockState::new(vec![CenterPanel]);
-
-    // Logs goes below it.
-    let [_, _] = state
-        .main_surface_mut()
-        .split_below(NodeIndex::root(), 0.3, vec![Logs]);
-
-    // Split everything left.
-    let [_, _] = state.main_surface_mut().split_left(NodeIndex::root(), 0.4, vec![LeftPanel]);
-
-    // Split everything right.
-    let [_, _] = state.main_surface_mut().split_right(NodeIndex::root(), 0.8, vec![RightPanel]);
-
-    state
-}
 
 // fn initial_attempt() -> DockState<TabName> {
 //     use TabName::{LeftPanel, CenterPanel};

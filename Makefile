@@ -33,7 +33,7 @@ APP_DIR := src/crates/app
 
 # This is the relative directory to the root that this will be deployed at. This only matters for wasm builds.
 # For example, if I want to serve at: https://omustardo.com/share/my_app/2026-02-15/, then this needs to be: /share/my_app/2026-02-15/
-PUBLIC_URL=/share/app_template/
+PUBLIC_URL=/share/greek_computer/
 
 all: run
 
@@ -114,7 +114,7 @@ presubmit: licenses-check test-release size-check
 # Push local commits to github. Use SSH to connect to the remote repository rather than HTTP since it
 # avoids the need to log in each time. Using SSH requires having created a SSH key pair on the local computer,
 # and having added the public key to your Github account. For more info, see SSH in https://www.omustardo.com/help/git.html
-REPO_SSH_URL := git@github.com:Omustardo/app_template.git
+REPO_SSH_URL := git@github.com:Omustardo/greek_computer.git
 push: presubmit
 	echo "Presubmit checks passed ✓"
 	echo "Pushing to local changes to github..."

@@ -40,10 +40,7 @@ impl TabViewer for MyAppTabViewer<'_> {
 
         pub use TabName::*;
         ui.push_id(format!("tab_{tab:?}"), |ui| match tab {
-            LeftPanel => self.state.show_left_panel(ui),
-            RightPanel => self.state.show_right_panel(ui),
             CenterPanel => self.state.show_center_panel(ui),
-            Logs => self.state.logger.show(ui),
         });
     }
 
