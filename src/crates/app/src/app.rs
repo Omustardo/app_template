@@ -132,80 +132,14 @@ impl TickState {
     }
 }
 
-const NUM_ROWS: usize = 4;
-const NUM_COLS: usize = 12;
-
-#[derive(serde::Deserialize, serde::Serialize, Clone)]
-pub struct Layer {
-    pub values: Vec<Vec<Option<i16>>>
-}
-impl Layer {
-    pub fn new(values: Vec<Vec<Option<i16>>>) -> Layer {
-        Layer { values }
-    }
-    pub fn new_from_text(num_rows: usize, num_cols: usize, txt: &str) -> Layer {
-        let mut values = vec![vec![None; num_cols]; num_rows];
-
-        // Create an iterator that ignores whitespace/newlines
-        let mut tokens = txt.split_whitespace();
-
-        for row in 0..num_rows {
-            for col in 0..num_cols {
-                let token = tokens.next()
-                    .expect("Input text does not contain enough tokens to fill the layer");
-
-                values[row][col] = match token {
-                    "__" => None,
-                    val => Some(val.parse::<i16>().expect("Invalid number format encountered")),
-                };
-            }
-        }
-
-        Layer { values }
-    }
-    pub fn default_layers() -> Vec<Layer> {
-        vec![
-            Layer::new_from_text(NUM_ROWS, NUM_COLS, "
-__ __ __ __ __ __ __ __ __ __ __ __
-__ __ __ __ __ __ __ __ __ __ __ __
-__ __ __ __ __ __ __ __ __ __ __ __
-10 __ 07 __ 15 __ 08 __ 03 __ 06 __"),
-
-            Layer::new_from_text(NUM_ROWS, NUM_COLS, "
-__ __ __ __ __ __ __ __ __ __ __ __
-__ __ __ __ __ __ __ __ __ __ __ __
-__ 14 __ 09 __ 12 __ 04 __ 07 15 __
-11 11 06 11 __ 06 17 07 03 __ 06 __"),
-
-            Layer::new_from_text(NUM_ROWS, NUM_COLS, "
-__ __ __ __ __ __ __ __ __ __ __ __
-__ 09 __ 05 __ 10 __ 08 __ 22 __ 16
-01 12 __ 21 06 15 04 09 18 11 26 14
-__ 07 08 09 13 09 07 13 21 17 04 05"),
-
-            Layer::new_from_text(NUM_ROWS, NUM_COLS, "
-12 __ 06 __ 10 __ 10 __ 01 __ 09 __
-02 13 09 __ 17 19 03 12 03 26 06 __
-06 __ 14 12 03 08 09 __ 09 20 12 03
-07 14 11 __ 08 __ 16 02 07 __ 09 __"),
-
-            Layer::new_from_text(NUM_ROWS, NUM_COLS, "
-08 03 04 12 02 05 10 07 16 08 07 08
-04 04 06 06 03 03 14 14 21 21 09 09
-04 05 06 07 08 09 10 11 12 13 14 15
-11 11 14 11 14 11 14 14 11 14 11 14")
-            ]
-    }
-}
-
 #[derive(serde::Deserialize, serde::Serialize, Clone)]
 pub struct GameState {
-    pub layers: Vec<Layer>
+    pub counter: i32
 }
 impl Default for GameState {
     fn default() -> Self {
         Self {
-            layers: Layer::default_layers()
+            counter: 2,
         }
     }
 }
@@ -232,7 +166,7 @@ impl Default for MyAppState {
                 window_name: "My App".to_owned(),
                 is_fullscreen: false,
                 dock_settings: DockSettings {
-                    show_top_bar: false,
+                    show_top_bar: true,
                     show_leaf_close_all: false,
                     show_leaf_collapse: false,
                     show_close_buttons: false,
@@ -267,7 +201,7 @@ impl Default for MyApp {
     fn default() -> Self {
         Self {
             state: MyAppState::default(),
-            dock_state: LayoutPresetName::SinglePanel.dock_state(),
+            dock_state: LayoutPresetName::ThreePanelsWithLogsBottomCenter.dock_state(),
             version: 0,
         }
     }

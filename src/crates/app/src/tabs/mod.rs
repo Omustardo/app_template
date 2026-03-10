@@ -16,7 +16,10 @@ use strum_macros::{Display, EnumIter};
 pub enum TabName {
     // Sort alphabetically so that the default iteration order is pleasing to the eye.
     // keep-sorted start
+    LeftPanel,
+    RightPanel,
     CenterPanel,
+    Logs,
     // keep-sorted end
 }
 
