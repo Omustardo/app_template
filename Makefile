@@ -37,7 +37,7 @@ PUBLIC_URL=/share/app_template/
 
 all: run
 
-build: build-native-dev build-wasm-dev
+build: build-dev-native build-dev-wasm
 # Similar to `build`, but with a few optimizations to binary size as well as different compiler flags that prevent
 # debug assertions.
 # The `--release` flag is used by cargo to turn off debug mode. Some affected code is guarded by `#[cfg(debug_assertions)]`.
@@ -47,7 +47,7 @@ build-deployable: build-release-native-compressed build-release-wasm-compressed
 
 build-common: licenses-check
 
-build-native-dev: build-common
+build-dev-native: build-common
 	cd src && cargo build --package $(APP_PACKAGE) --quiet
 build-release-native: build-common
 	cd src && cargo build --package $(APP_PACKAGE) --release --quiet
@@ -56,7 +56,7 @@ build-release-native: build-common
 run-release-native: build-release-native
 	cd src && cargo run --package $(APP_PACKAGE) --release --quiet
 
-build-wasm-dev: build-common
+build-dev-wasm: build-common
 	cd $(APP_DIR) && trunk build --quiet --public-url=$(PUBLIC_URL)
 build-release-wasm: build-common
 	# This will generate a `dist` directory wherever it is run from (APP_DIR in this case).
