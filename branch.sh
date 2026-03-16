@@ -5,8 +5,23 @@ set -e
 if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
     echo "Usage: ./branch.sh [new_directory] [App Title] [app_snake_case] [github_username/repo_name]"
     echo "Example: ./branch.sh my_app \"My Awesome App\" my_awesome_app Omustardo/my_awesome_app"
-    return 0 2>/dev/null
+    return 0 2>/dev/null || (exit 0)
 fi
+
+# 0. Check for gh CLI and authentication
+if ! command -v gh &> /dev/null; then
+    echo "Error: GitHub CLI (gh) is not installed."
+    echo "Please install it from https://cli.github.com/ and authenticate before running this script."
+    return 1 2>/dev/null || false
+fi
+
+echo "Checking GitHub authentication..."
+if ! gh auth status &> /dev/null; then
+    echo "Error: You are not authenticated with the GitHub CLI."
+    echo "Please run 'gh auth login' before continuing."
+    return 1 2>/dev/null || false
+fi
+echo "Authenticated with GitHub CLI ✓"
 
 # Interactive prompts if arguments are not provided
 NEW_DIR=$1
@@ -94,8 +109,11 @@ git init
 git add .
 git commit -m "Initial commit from $APP_TITLE branched from app_template" || true
 
+echo "Creating new repository on GitHub: $GITHUB_REPO..."
+gh repo create "$GITHUB_REPO" --public --source=. --remote=origin --push
+
 echo "--------------------------------------------------------"
-echo "Project successfully branched into $NEW_DIR!"
+echo "Project successfully branched into $NEW_DIR and pushed to GitHub!"
 echo ""
 echo "Deleting branch.sh from $NEW_DIR as it is no longer needed..."
 rm -f branch.sh
