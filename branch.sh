@@ -3,8 +3,8 @@ set -e
 
 # Provide help if requested
 if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
-    echo "Usage: ./branch.sh [new_directory] [App Title] [app_snake_case] [github_username/repo_name]"
-    echo "Example: ./branch.sh my_app \"My Awesome App\" my_awesome_app Omustardo/my_awesome_app"
+    echo "Usage: ./branch.sh [new_directory] [App Title] [app_snake_case] [github_username/repo_name] [public|private]"
+    echo "Example: ./branch.sh my_app \"My Awesome App\" my_awesome_app Omustardo/my_awesome_app private"
     return 0 2>/dev/null || (exit 0)
 fi
 
@@ -43,6 +43,11 @@ GITHUB_REPO=$4
 if [ -z "$GITHUB_REPO" ]; then
     read -p "Enter your GitHub username/repo_name (e.g. 'Omustardo/my_awesome_app'): " GITHUB_REPO
 fi
+
+REPO_VISIBILITY=$5
+while [ "$REPO_VISIBILITY" != "public" ] && [ "$REPO_VISIBILITY" != "private" ]; do
+    read -p "Should the GitHub repo be public or private? (public/private): " REPO_VISIBILITY
+done
 
 # 1. Branch the project from github.com
 echo "Cloning the template from github.com into $NEW_DIR..."
@@ -109,8 +114,8 @@ git init
 git add .
 git commit -m "Initial commit from $APP_TITLE branched from app_template" || true
 
-echo "Creating new repository on GitHub: $GITHUB_REPO..."
-gh repo create "$GITHUB_REPO" --public --source=. --remote=origin --push
+echo "Creating new $REPO_VISIBILITY repository on GitHub: $GITHUB_REPO..."
+gh repo create "$GITHUB_REPO" --$REPO_VISIBILITY --source=. --remote=origin --push
 
 echo "--------------------------------------------------------"
 echo "Project successfully branched into $NEW_DIR and pushed to GitHub!"
