@@ -68,6 +68,12 @@ of the `Makefile`. There is more detail in the comments there.
 
 ## Branching this template
 
+Copy and run `branch.sh`. It will ask you which folder to branch the content
+into, branch it, create a local git repo, create a github.com repo, and do the
+initial commit. After that, `make run` will get you started.
+
+For more potential steps, see below:
+
 1. If you are making a private personal project, you may remove LICENSES, and
 the license related sections of the Makefile. Otherwise you may want to update
 `deny.toml` to reflect the types of licenses you are okay with your project
